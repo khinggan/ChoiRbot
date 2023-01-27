@@ -29,7 +29,7 @@ def main():
 
     # Get path to the turtlebot3 model
     sdf_file_path = os.path.join(
-        get_package_share_directory("choirbot_examples"), "model_burger.sdf")
+        get_package_share_directory("choirbot_examples"), "model.sdf")
 
     # Set data for request
     request = SpawnEntity.Request()
