@@ -23,34 +23,43 @@ def generate_launch_description():
     np.random.seed(args.seed)
 
     # communication matrix
-    N = 4
+    N = 6
     Adj = np.array([ # alternated zeros and ones
-        [0, 1, 1, 1], 
-        [1, 0, 1, 1], 
-        [1, 1, 0, 1], 
-        [1, 1, 1, 0]
+        [0, 1, 1, 1, 1, 1],
+        [1, 0, 1, 1, 1, 1],
+        [1, 1, 0, 1, 1, 1],
+        [1, 1, 1, 0, 1, 1],
+        [1, 1, 1, 1, 0, 1],
+        [1, 1, 1, 1, 1, 0]
     ])
 
     # generate matrix of desired inter-robot distances
     # adjacent robots have distance L
-    # opposite robots have distance sqrt(2)*L
-    sqrt2 = np.sqrt(2)
+    # opposite robots have distance 2L
     W = np.array([
-        [0, L, sqrt2*L, L], 
-        [L, 0, L, sqrt2*L], 
-        [sqrt2*L, L, 0, L], 
-        [L, sqrt2*L, L, 0]
+        [0,   L,   np.sqrt(3)*L,   2*L, np.sqrt(3)*L,   L],
+        [L,   0,   L,   np.sqrt(3)*L,   2*L, np.sqrt(3)*L],
+        [np.sqrt(3)*L,   L,   0,   L,   np.sqrt(3)*L,   2*L],
+        [2*L, np.sqrt(3)*L,   L,   0,   L,   np.sqrt(3)*L],
+        [np.sqrt(3)*L,   2*L, np.sqrt(3)*L,   L,   0,   L],
+        [L,   np.sqrt(3)*L,   2*L, np.sqrt(3)*L,   L,   0]
     ])
 
+    # generate coordinates of hexagon with center in the origin
+    a = L/2
+    b = np.sqrt(3)*a
+
     P = np.array([
-        [-L/2, L/2, 0], 
-        [L/2, L/2, 0], 
-        [L/2, -L/2, 0], 
-        [-L/2, -L/2, 0]
+        [-b, a , 0],
+        [0, 2.0*a, 0],      
+        [b, a, 0],
+        [b, -a, 0],
+        [0, -2.0*a, 0],
+        [-b, -a, 0]
     ])
     
     # initial positions have a perturbation of at most L/2
-    P += np.random.uniform(-L/2, L/2, (4,3))
+    P += np.random.uniform(-L/2, L/2, (N,3))
 
     # initialize launch description
     robot_launch = []       # launched after 10 sec (to let Gazebo open)
